@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Chosen Chigozie — Software Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #09090f;
+    --surface: #0f0f1a;
+    --card: #13131f;
+    --border: #1e1e30;
+    --red: #e94560;
+    --red-dim: rgba(233,69,96,0.12);
+    --red-glow: rgba(233,69,96,0.25);
+    --navy: #1a1a2e;
+    --gold: #f0a500;
+    --text: #e8e8f0;
+    --muted: #6b6b8a;
+    --subtle: #9999bb;
+    --mono: 'DM Mono', monospace;
+    --display: 'Syne', sans-serif;
+    --serif: 'Instrument Serif', serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--display);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ── Custom Cursor ── */
+  #cursor {
+    width: 10px; height: 10px;
+    background: var(--red);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
+    mix-blend-mode: normal;
+  }
+  #cursor-ring {
+    width: 36px; height: 36px;
+    border: 1.5px solid rgba(233,69,96,0.5);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: transform 0.18s ease, width 0.25s, height 0.25s, opacity 0.2s;
+  }
+  body:hover #cursor { opacity: 1; }
+
+  /* ── Noise overlay ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* ── Nav ── */
+  nav {
+    position: fixed; top: 0; width: 100%;
+    padding: 20px 60px;
+    display: flex; justify-content: space-between; align-items: center;
+    z-index: 100;
+    background: linear-gradient(to bottom, rgba(9,9,15,0.95), transparent);
+    backdrop-filter: blur(2px);
+  }
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--red);
+    letter-spacing: 0.1em;
+  }
+  .nav-links { display: flex; gap: 36px; }
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--red); }
+
+  /* ── Hero ── */
+  #hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 120px 60px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-grid-bg {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(233,69,96,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(233,69,96,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+  }
+
+  .hero-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+  }
+  .orb-1 {
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(233,69,96,0.15), transparent 70%);
+    top: -100px; right: -100px;
+    animation: drift 8s ease-in-out infinite alternate;
+  }
+  .orb-2 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(26,26,46,0.8), transparent 70%);
+    bottom: 0; left: -50px;
+  }
+
+  @keyframes drift {
+    from { transform: translate(0,0) scale(1); }
+    to   { transform: translate(-30px, 30px) scale(1.05); }
+  }
+
+  .hero-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--red);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    display: flex; align-items: center; gap: 12px;
+    animation: fadeUp 0.8s ease both;
+  }
+  .hero-tag::before {
+    content: '';
+    width: 40px; height: 1px;
+    background: var(--red);
+  }
+
+  h1.hero-name {
+    font-size: clamp(56px, 8vw, 110px);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin-bottom: 8px;
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
+  h1.hero-name .first { color: var(--text); }
+  h1.hero-name .last  {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--red);
+  }
+
+  .hero-subtitle {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(22px, 3vw, 36px);
+    color: var(--muted);
+    margin: 24px 0 48px;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  .hero-cta {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+  .btn-primary {
+    padding: 14px 32px;
+    background: var(--red);
+    color: white;
+    border: none;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: none;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  }
+  .btn-primary:hover {
+    background: #ff2d52;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(233,69,96,0.4);
+  }
+  .btn-outline {
+    padding: 14px 32px;
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: none;
+    transition: border-color 0.2s, color 0.2s;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  }
+  .btn-outline:hover { border-color: var(--red); color: var(--red); }
+
+  .hero-stats {
+    position: absolute; bottom: 60px; right: 60px;
+    display: flex; gap: 48px;
+    animation: fadeUp 0.8s 0.4s ease both;
+  }
+  .stat { text-align: right; }
+  .stat-num {
+    font-size: 42px; font-weight: 800;
+    color: var(--red); line-height: 1;
+  }
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 10px; color: var(--muted);
+    letter-spacing: 0.15em; text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  /* ── Sections common ── */
+  section {
+    padding: 100px 60px;
+    position: relative;
+  }
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--red);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1; max-width: 60px;
+    height: 1px; background: var(--red);
+  }
+  h2.section-title {
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 60px;
+  }
+
+  /* ── About ── */
+  #about { background: var(--surface); }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .about-text p {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--subtle);
+    line-height: 1.9;
+    margin-bottom: 20px;
+  }
+  .about-text p strong { color: var(--text); font-weight: 400; }
+  .about-text .quote {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 22px;
+    color: var(--text);
+    border-left: 3px solid var(--red);
+    padding-left: 20px;
+    margin: 32px 0;
+    line-height: 1.5;
+  }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+  .skill-item {
+    background: var(--card);
+    padding: 18px 20px;
+    border: 1px solid var(--border);
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .skill-item::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--red);
+    transform: scaleY(0);
+    transition: transform 0.2s;
+    transform-origin: bottom;
+  }
+  .skill-item:hover::before { transform: scaleY(1); }
+  .skill-item:hover { background: rgba(233,69,96,0.05); border-color: rgba(233,69,96,0.3); }
+  .skill-cat {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--red);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .skill-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* ── Projects ── */
+  #projects { background: var(--bg); }
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .project-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 36px 32px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+    cursor: none;
+  }
+  .project-card::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--red-dim), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .project-card:hover { border-color: rgba(233,69,96,0.4); transform: translateY(-4px); }
+  .project-card:hover::after { opacity: 1; }
+
+  .project-card.featured {
+    grid-column: span 2;
+  }
+
+  .project-type {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--red);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .type-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--red);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .project-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+  .project-card.featured .project-title { font-size: 28px; }
+
+  .project-desc {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.8;
+    margin-bottom: 24px;
+  }
+
+  .project-tags {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-bottom: 28px;
+  }
+  .tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    color: var(--subtle);
+    letter-spacing: 0.1em;
+  }
+  .tag.highlight { border-color: var(--red); color: var(--red); }
+
+  .project-link {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--red);
+    text-decoration: none;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: gap 0.2s;
+  }
+  .project-link:hover { gap: 14px; }
+  .project-link::after { content: '→'; }
+
+  .project-number {
+    position: absolute;
+    top: 24px; right: 28px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--border);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── Mobile Apps ── */
+  #mobile { background: var(--surface); }
+  .mobile-showcase {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+  .phone-frame {
+    position: relative;
+    width: 260px;
+    margin: 0 auto;
+  }
+  .phone-outer {
+    background: linear-gradient(145deg, #1e1e30, #0f0f1a);
+    border: 2px solid var(--border);
+    border-radius: 44px;
+    padding: 16px 12px;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05);
+    position: relative;
+  }
+  .phone-notch {
+    width: 80px; height: 24px;
+    background: var(--bg);
+    border-radius: 0 0 16px 16px;
+    margin: 0 auto 12px;
+  }
+  .phone-screen {
+    background: linear-gradient(135deg, #13131f, #1a1a2e);
+    border-radius: 28px;
+    height: 420px;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    padding: 20px;
+    border: 1px solid var(--border);
+  }
+  .app-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 20px;
+  }
+  .app-title { font-size: 18px; font-weight: 700; }
+  .app-icon {
+    width: 32px; height: 32px;
+    background: var(--red);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+  .app-card {
+    background: rgba(233,69,96,0.08);
+    border: 1px solid rgba(233,69,96,0.2);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+  .app-card-label { font-family: var(--mono); font-size: 9px; color: var(--muted); letter-spacing: 0.1em; }
+  .app-card-value { font-size: 13px; font-weight: 600; margin-top: 4px; }
+  .app-bar {
+    height: 6px; background: var(--border);
+    border-radius: 3px; margin-top: 10px; overflow: hidden;
+  }
+  .app-bar-fill {
+    height: 100%; background: var(--red);
+    border-radius: 3px;
+    animation: barGrow 2s ease infinite alternate;
+  }
+  @keyframes barGrow {
+    from { width: 45%; }
+    to { width: 78%; }
+  }
+  .app-bottom-nav {
+    margin-top: auto;
+    background: rgba(255,255,255,0.03);
+    border-radius: 20px;
+    padding: 12px 20px;
+    display: flex; justify-content: space-around;
+    border: 1px solid var(--border);
+  }
+  .nav-dot { width: 6px; height: 6px; border-radius: 50%; }
+  .nav-dot.active { background: var(--red); }
+  .nav-dot:not(.active) { background: var(--border); }
+
+  .mobile-info { }
+  .mobile-info h3 {
+    font-size: 32px; font-weight: 800;
+    margin-bottom: 16px; letter-spacing: -0.02em;
+  }
+  .mobile-info p {
+    font-family: var(--mono);
+    font-size: 13px; color: var(--muted);
+    line-height: 1.9; margin-bottom: 28px;
+  }
+  .mobile-stack {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    margin-bottom: 32px;
+  }
+  .stack-badge {
+    padding: 8px 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--subtle);
+    letter-spacing: 0.1em;
+  }
+  .stack-badge.active {
+    background: var(--red-dim);
+    border-color: rgba(233,69,96,0.4);
+    color: var(--red);
+  }
+
+  .mobile-apps-list {
+    display: grid; gap: 12px;
+    margin-top: 48px;
+  }
+  .mobile-app-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    display: flex; align-items: center; gap: 20px;
+    transition: border-color 0.2s;
+  }
+  .mobile-app-item:hover { border-color: rgba(233,69,96,0.3); }
+  .app-emoji {
+    font-size: 28px;
+    width: 52px; height: 52px;
+    background: var(--red-dim);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .app-info { flex: 1; }
+  .app-name { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .app-meta { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+  .app-platform {
+    font-family: var(--mono);
+    font-size: 9px; color: var(--red);
+    border: 1px solid rgba(233,69,96,0.3);
+    padding: 4px 8px;
+    letter-spacing: 0.1em;
+  }
+
+  /* ── Concept Projects ── */
+  #concepts { background: var(--bg); }
+
+  .concepts-intro {
+    font-family: var(--mono);
+    font-size: 13px; color: var(--muted);
+    line-height: 1.9; max-width: 640px;
+    margin-bottom: 64px;
+  }
+  .concepts-intro span { color: var(--red); }
+
+  .concepts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+
+  .concept-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+    cursor: none;
+    display: flex; flex-direction: column;
+  }
+  .concept-card:hover { border-color: rgba(233,69,96,0.45); transform: translateY(-3px); }
+
+  .concept-card-header {
+    padding: 32px 32px 24px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .concept-card-header::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--red), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .concept-card:hover .concept-card-header::before { opacity: 1; }
+
+  .concept-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--mono);
+    font-size: 9px; color: var(--red);
+    letter-spacing: 0.25em; text-transform: uppercase;
+    margin-bottom: 14px;
+    background: var(--red-dim);
+    border: 1px solid rgba(233,69,96,0.25);
+    padding: 4px 10px;
+  }
+  .concept-badge-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%; background: var(--red);
+    animation: pulse 2s infinite;
+  }
+
+  .concept-num {
+    position: absolute; top: 28px; right: 28px;
+    font-family: var(--mono);
+    font-size: 36px; font-weight: 400;
+    color: var(--border);
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+
+  .concept-title {
+    font-size: 20px; font-weight: 700;
+    color: var(--text); line-height: 1.2;
+    margin-bottom: 10px; letter-spacing: -0.01em;
+  }
+
+  .concept-tagline {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 14px; color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .concept-card-body {
+    padding: 24px 32px;
+    flex: 1; display: flex; flex-direction: column; gap: 20px;
+  }
+
+  .concept-desc {
+    font-family: var(--mono);
+    font-size: 11.5px; color: var(--subtle);
+    line-height: 1.85;
+  }
+
+  .concept-features {
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .concept-feature {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-family: var(--mono); font-size: 11px; color: var(--subtle);
+    line-height: 1.6;
+  }
+  .feature-icon {
+    width: 22px; height: 22px;
+    background: var(--red-dim);
+    border: 1px solid rgba(233,69,96,0.2);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; flex-shrink: 0; margin-top: 1px;
+  }
+
+  .concept-card-footer {
+    padding: 20px 32px;
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+  }
+
+  .concept-tags {
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .concept-tag {
+    font-family: var(--mono);
+    font-size: 8.5px; padding: 3px 8px;
+    border: 1px solid var(--border);
+    color: var(--muted); letter-spacing: 0.1em;
+  }
+  .concept-tag.hi { border-color: rgba(233,69,96,0.35); color: var(--red); }
+
+  .concept-proves {
+    font-family: var(--mono);
+    font-size: 9px; color: var(--muted);
+    letter-spacing: 0.1em; text-transform: uppercase;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .concept-proves::before {
+    content: '✓';
+    color: var(--red); font-size: 11px;
+  }
+
+  /* ── Experience ── */
+  #experience { background: var(--surface); }
+  .timeline {
+    position: relative;
+    padding-left: 40px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 8px; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--red), transparent);
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 52px;
+    animation: fadeUp 0.6s ease both;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -44px; top: 6px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--red);
+    box-shadow: 0 0 0 4px rgba(233,69,96,0.2);
+  }
+  .tl-date {
+    font-family: var(--mono);
+    font-size: 10px; color: var(--red);
+    letter-spacing: 0.2em; text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .tl-title { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+  .tl-company {
+    font-family: var(--mono);
+    font-size: 12px; color: var(--muted);
+    margin-bottom: 14px;
+  }
+  .tl-bullets {
+    list-style: none;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .tl-bullets li {
+    font-family: var(--mono);
+    font-size: 12px; color: var(--subtle);
+    line-height: 1.7;
+    padding-left: 16px;
+    position: relative;
+  }
+  .tl-bullets li::before {
+    content: '›';
+    position: absolute; left: 0;
+    color: var(--red);
+  }
+
+  /* ── Contact ── */
+  #contact {
+    background: var(--surface);
+    text-align: center;
+  }
+  .contact-inner { max-width: 600px; margin: 0 auto; }
+  .contact-inner p {
+    font-family: var(--mono);
+    font-size: 13px; color: var(--muted);
+    line-height: 1.9; margin-bottom: 40px;
+  }
+  .contact-links {
+    display: flex; justify-content: center; gap: 24px; flex-wrap: wrap;
+    margin-top: 40px;
+  }
+  .contact-link {
+    font-family: var(--mono);
+    font-size: 11px; color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    transition: color 0.2s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .contact-link:hover { color: var(--red); }
+
+  /* ── Footer ── */
+  footer {
+    padding: 30px 60px;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  footer p {
+    font-family: var(--mono);
+    font-size: 10px; color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+  .footer-dot { color: var(--red); }
+
+  /* ── Scroll animations ── */
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--red); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">CC_DEV</div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#projects">Projects</a>
+    <a href="#mobile">Mobile</a>
+    <a href="#concepts">Concepts</a>
+    <a href="#experience">Experience</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-orb orb-1"></div>
+  <div class="hero-orb orb-2"></div>
+
+  <div class="hero-tag">Available for new projects</div>
+
+  <h1 class="hero-name">
+    <span class="first">Chosen</span><br>
+    <span class="last">Chigozie.</span>
+  </h1>
+
+  <p class="hero-subtitle">Full-Stack · Web3 · Mobile Developer</p>
+
+  <div class="hero-cta">
+    <a href="#projects" class="btn-primary">View Work</a>
+    <a href="mailto:chosentech506@gmail.com" class="btn-outline">Get In Touch</a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">4+</div>
+      <div class="stat-label">Years Exp.</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">10+</div>
+      <div class="stat-label">Projects</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">6</div>
+      <div class="stat-label">Companies</div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">About Me</div>
+  <h2 class="section-title">Building the<br>digital future.</h2>
+
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <div class="quote">"Great ideas deserve great execution."</div>
+      <p>I'm <strong>Chosen Chigozie</strong>, a results-driven Software Developer based in <strong>Abuja, Nigeria</strong>, with over 4 years of experience crafting high-performance digital products across web, mobile, and blockchain ecosystems.</p>
+      <p>From building Solana-based Web3 dApps to architecting cross-platform Flutter applications, I bring a full-stack perspective to every problem — combining clean code with strong product instincts.</p>
+      <p>I've shipped products for clients across the <strong>US, UK, Dubai, and West Africa</strong>, and I thrive in distributed, high-autonomy environments where ownership and craft matter.</p>
+    </div>
+
+    <div class="skills-grid reveal">
+      <div class="skill-item">
+        <div class="skill-cat">Language</div>
+        <div class="skill-name">JavaScript</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-cat">Mobile</div>
+        <div class="skill-name">Flutter</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-cat">Mobile</div>
+        <div class="skill-name">React Native</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-cat">Backend</div>
+        <div class="skill-name">PHP</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-cat">Database</div>
+        <div class="skill-name">MySQL</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-cat">Blockchain</div>
+        <div class="skill-name">Solana / Web3</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-cat">Frontend</div>
+        <div class="skill-name">HTML & CSS</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-cat">Soft Skill</div>
+        <div class="skill-name">Team Leadership</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label">Selected Work</div>
+  <h2 class="section-title">Projects &<br>Platforms.</h2>
+
+  <div class="projects-grid">
+
+    <div class="project-card featured reveal">
+      <span class="project-number">01</span>
+      <div class="project-type"><span class="type-dot"></span>Web3 · dApp</div>
+      <div class="project-title">Bored Ape Yacht Club Platform</div>
+      <div class="project-desc">Architected and integrated secure Web3 features for one of the world's most recognised NFT platforms. Implemented seamless wallet authentication, optimised dApp performance, and delivered gas-efficient smart contract interactions for Pey Yachts.</div>
+      <div class="project-tags">
+        <span class="tag highlight">Solana</span>
+        <span class="tag highlight">Web3.js</span>
+        <span class="tag">Smart Contracts</span>
+        <span class="tag">Wallet Auth</span>
+        <span class="tag">dApp</span>
+      </div>
+      <a href="https://www.boredapeyachtclub.com" target="_blank" class="project-link">View Project</a>
+    </div>
+
+    <div class="project-card reveal">
+      <span class="project-number">02</span>
+      <div class="project-type"><span class="type-dot"></span>DeFi · Web3</div>
+      <div class="project-title">Inter.trade DEX</div>
+      <div class="project-desc">Engineered decentralised trading functionalities, improving transaction speeds and state management across the platform.</div>
+      <div class="project-tags">
+        <span class="tag highlight">DeFi</span>
+        <span class="tag">Web3</span>
+        <span class="tag">JavaScript</span>
+      </div>
+      <a href="https://www.inter.trade" target="_blank" class="project-link">View Project</a>
+    </div>
+
+    <div class="project-card reveal">
+      <span class="project-number">03</span>
+      <div class="project-type"><span class="type-dot"></span>Solana · Meme Coin</div>
+      <div class="project-title">$KEK on Solana</div>
+      <div class="project-desc">Deployed custom Solana-based Web3 features and streamlined cross-functional team workflows to guarantee on-time delivery for a UK-based crypto project.</div>
+      <div class="project-tags">
+        <span class="tag highlight">Solana</span>
+        <span class="tag">Rust</span>
+        <span class="tag">Team Lead</span>
+      </div>
+      <a href="https://www.cultofkek.lol" target="_blank" class="project-link">View Project</a>
+    </div>
+
+    <div class="project-card reveal">
+      <span class="project-number">04</span>
+      <div class="project-type"><span class="type-dot"></span>Real Estate · Web App</div>
+      <div class="project-title">Wakanda Real Estate</div>
+      <div class="project-desc">Developed and launched the company's primary real estate web application and property listing portal serving the Dubai market.</div>
+      <div class="project-tags">
+        <span class="tag highlight">PHP</span>
+        <span class="tag">MySQL</span>
+        <span class="tag">HTML/CSS</span>
+      </div>
+      <a href="#" class="project-link">Case Study</a>
+    </div>
+
+    <div class="project-card featured reveal">
+      <span class="project-number">05</span>
+      <div class="project-type"><span class="type-dot"></span>Travel · Full-Stack</div>
+      <div class="project-title">Pearle & Praise Tours Platform</div>
+      <div class="project-desc">Spearheaded digital transformation for a Dubai-based travel company — building scalable web platforms that automated booking workflows, integrated payment systems, and significantly boosted online conversions. Promoted to Lead Developer within 7 months.</div>
+      <div class="project-tags">
+        <span class="tag highlight">Lead Dev</span>
+        <span class="tag">Booking System</span>
+        <span class="tag">PHP</span>
+        <span class="tag">MySQL</span>
+        <span class="tag">Payments</span>
+      </div>
+      <a href="#" class="project-link">Case Study</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- MOBILE APPS -->
+<section id="mobile">
+  <div class="section-label">Mobile Development</div>
+  <h2 class="section-title">Apps for<br>every platform.</h2>
+
+  <div class="mobile-showcase">
+    <div>
+      <div class="phone-frame reveal">
+        <div class="phone-outer">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="app-header">
+              <div class="app-title">Dashboard</div>
+              <div class="app-icon">⚡</div>
+            </div>
+            <div class="app-card">
+              <div class="app-card-label">ACTIVE BOOKINGS</div>
+              <div class="app-card-value">24 Trips</div>
+              <div class="app-bar"><div class="app-bar-fill" style="width:72%"></div></div>
+            </div>
+            <div class="app-card">
+              <div class="app-card-label">REVENUE THIS MONTH</div>
+              <div class="app-card-value">$12,840</div>
+              <div class="app-bar"><div class="app-bar-fill" style="animation-delay:0.3s; width:55%"></div></div>
+            </div>
+            <div class="app-card">
+              <div class="app-card-label">CUSTOMER RATING</div>
+              <div class="app-card-value">4.9 ★★★★★</div>
+              <div class="app-bar"><div class="app-bar-fill" style="animation-delay:0.6s; width:90%"></div></div>
+            </div>
+            <div class="app-bottom-nav">
+              <div class="nav-dot active"></div>
+              <div class="nav-dot"></div>
+              <div class="nav-dot"></div>
+              <div class="nav-dot"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mobile-info reveal">
+      <h3>Cross-Platform<br>Mobile Expertise</h3>
+      <p>Specialising in Flutter and React Native, I build apps that feel native on both iOS and Android. Every pixel is intentional — from smooth animations to efficient state management and offline-first architectures.</p>
+
+      <div class="mobile-stack">
+        <span class="stack-badge active">Flutter / Dart</span>
+        <span class="stack-badge active">React Native</span>
+        <span class="stack-badge">Firebase</span>
+        <span class="stack-badge">REST APIs</span>
+        <span class="stack-badge">State Management</span>
+        <span class="stack-badge">Push Notifications</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="mobile-apps-list">
+    <div class="mobile-app-item reveal">
+      <div class="app-emoji">✈️</div>
+      <div class="app-info">
+        <div class="app-name">Tour Booking App — Pearle & Praise</div>
+        <div class="app-meta">Flutter · iOS & Android · Booking system, payment integration, trip management</div>
+      </div>
+      <span class="app-platform">Flutter</span>
+    </div>
+    <div class="mobile-app-item reveal">
+      <div class="app-emoji">🏘️</div>
+      <div class="app-info">
+        <div class="app-name">Property Listings App — Wakanda Real Estate</div>
+        <div class="app-meta">React Native · iOS & Android · Property search, filtering, agent contact</div>
+      </div>
+      <span class="app-platform">React Native</span>
+    </div>
+    <div class="mobile-app-item reveal">
+      <div class="app-emoji">🌍</div>
+      <div class="app-info">
+        <div class="app-name">Optimumworldafrica Mobile Platform</div>
+        <div class="app-meta">Flutter · Lead Developer · End-to-end lifecycle from architecture to deployment</div>
+      </div>
+      <span class="app-platform">Flutter</span>
+    </div>
+    <div class="mobile-app-item reveal">
+      <div class="app-emoji">🔗</div>
+      <div class="app-info">
+        <div class="app-name">Web3 Wallet Interface — Mobile dApp</div>
+        <div class="app-meta">React Native · Solana wallet integration, token dashboard, transaction history</div>
+      </div>
+      <span class="app-platform">React Native</span>
+    </div>
+  </div>
+</section>
+
+<!-- CONCEPT PROJECTS -->
+<section id="concepts">
+  <div class="section-label">Concept Projects</div>
+  <h2 class="section-title">Built to<br>impress.</h2>
+
+  <p class="concepts-intro">
+    Beyond client work, these are <span>engineering-focused concept projects</span> designed to showcase
+    advanced technical depth — from biometric-secured crypto escrows to real-time logistics systems
+    and enterprise SaaS platforms. Each one demonstrates a distinct, employer-relevant skill set.
+  </p>
+
+  <div class="concepts-grid">
+
+    <!-- 1: Escrow Wallet -->
+    <div class="concept-card reveal">
+      <div class="concept-card-header">
+        <div class="concept-num">01</div>
+        <div class="concept-badge"><span class="concept-badge-dot"></span>Flutter · React Native</div>
+        <div class="concept-title">Cross-Platform Crypto & Fiat Escrow Wallet</div>
+        <div class="concept-tagline">Secure peer-to-peer trading with biometric auth and live price feeds</div>
+      </div>
+      <div class="concept-card-body">
+        <p class="concept-desc">
+          A mobile wallet app where users securely buy, sell, or trade crypto and fiat assets via a
+          built-in escrow system. Funds are locked until both parties confirm — eliminating fraud risk
+          in P2P trades. Live prices stream from the CoinGecko API; identity is verified biometrically
+          without ever leaving the app.
+        </p>
+        <div class="concept-features">
+          <div class="concept-feature">
+            <div class="feature-icon">🔑</div>
+            <span>Biometric authentication — FaceID &amp; Fingerprint via device-native APIs</span>
+          </div>
+          <div class="concept-feature">
+            <div class="feature-icon">📈</div>
+            <span>Live crypto price tracking via CoinGecko API with real-time chart updates</span>
+          </div>
+          <div class="concept-feature">
+            <div class="feature-icon">🔐</div>
+            <span>P2P escrow dashboard — funds locked on-chain until dual confirmation</span>
+          </div>
+          <div class="concept-feature">
+            <div class="feature-icon">🔔</div>
+            <span>Push notifications for every transaction stage update</span>
+          </div>
+        </div>
+      </div>
+      <div class="concept-card-footer">
+        <div class="concept-tags">
+          <span class="concept-tag hi">Flutter</span>
+          <span class="concept-tag hi">React Native</span>
+          <span class="concept-tag">CoinGecko API</span>
+          <span class="concept-tag">Biometrics</span>
+          <span class="concept-tag">Escrow</span>
+          <span class="concept-tag">Web3</span>
+        </div>
+        <div class="concept-proves">State Management · Secure Storage</div>
+      </div>
+    </div>
+
+    <!-- 2: Logistics Tracker -->
+    <div class="concept-card reveal">
+      <div class="concept-card-header">
+        <div class="concept-num">02</div>
+        <div class="concept-badge"><span class="concept-badge-dot"></span>Flutter · Firebase</div>
+        <div class="concept-title">Real-Time Logistics & Delivery Tracker</div>
+        <div class="concept-tagline">Uber-like live tracking with dual Driver & Customer interfaces</div>
+      </div>
+      <div class="concept-card-body">
+        <p class="concept-desc">
+          A dual-interface logistics app pairing a Driver app with a Customer tracking view — connected
+          by real-time WebSocket or Firebase streams. Customers watch their delivery move live on Google
+          Maps; drivers receive optimised routes and can message customers in-app. An admin panel
+          controls route assignment and fleet overview.
+        </p>
+        <div class="concept-features">
+          <div class="concept-feature">
+            <div class="feature-icon">🗺️</div>
+            <span>Live GPS tracking with Google Maps API — sub-second location updates</span>
+          </div>
+          <div class="concept-feature">
+            <div class="feature-icon">⚡</div>
+            <span>Real-time state streaming via WebSockets or Firebase Realtime DB</span>
+          </div>
+          <div class="concept-feature">
+            <div class="feature-icon">🛠️</div>
+            <span>Admin panel for delivery route assignment and driver management</span>
+          </div>
+          <div class="concept-feature">
+            <div class="feature-icon">💬</div>
+            <span>In-app messaging and call triggers between driver and customer</span>
+          </div>
+        </div>
+      </div>
+      <div class="concept-card-footer">
+        <div class="concept-tags">
+          <span class="concept-tag hi">Flutter</span>
+          <span class="concept-tag hi">Firebase</span>
+          <span class="concept-tag">Google Maps API</span>
+          <span class="concept-tag">WebSockets</span>
+          <span class="concept-tag">Real-time</span>
+        </div>
+        <div class="concept-proves">Background Tasks · Mapping APIs</div>
+      </div>
+    </div>
+
+    <!-- 3: SaaS Invoice Manager -->
+    <div class="concept-card reveal">
+      <div class="concept-card-header">
+        <div class="concept-num">03</div>
+        <div class="concept-badge"><span class="concept-badge-dot"></span>PHP · MySQL · React</div>
+        <div class="concept-title">Enterprise SaaS Subscription & Invoice Manager</div>
+        <div class="concept-tagline">Multi-tenant business dashboard with automated billing and MRR analytics</div>
+      </div>
+      <div class="concept-card-body">
+        <p class="concept-desc">
+          A multi-tenant SaaS platform where business owners manage clients, generate automated invoices,
+          and track revenue. Built on a deeply normalised relational MySQL schema — Users → Businesses →
+          Clients → Invoices — with a cron-driven billing engine and dynamic analytics charts covering
+          MRR, churn rate, and outstanding payments.
+        </p>
+        <div class="concept-features">
+          <div class="concept-feature">
+            <div class="feature-icon">🗄️</div>
+            <span>Advanced normalised MySQL schema with relational mappings across 4 entity layers</span>
+          </div>
+          <div class="concept-feature">
+            <div class="feature-icon">📄</div>
+            <span>Cron-driven automated PDF invoice generation and email delivery on billing cycles</span>
+          </div>
+          <div class="concept-feature">
+            <div class="feature-icon">📊</div>
+            <span>Analytics dashboard — Monthly Recurring Revenue, churn rate, and pending payments</span>
+          </div>
+          <div class="concept-feature">
+            <div class="feature-icon">🏢</div>
+            <span>Full multi-tenancy: isolated data per business, role-based access control</span>
+          </div>
+        </div>
+      </div>
+      <div class="concept-card-footer">
+        <div class="concept-tags">
+          <span class="concept-tag hi">PHP</span>
+          <span class="concept-tag hi">MySQL</span>
+          <span class="concept-tag">React</span>
+          <span class="concept-tag">Cron Jobs</span>
+          <span class="concept-tag">Multi-tenant</span>
+          <span class="concept-tag">SaaS</span>
+        </div>
+        <div class="concept-proves">DB Normalisation · Payment Logic</div>
+      </div>
+    </div>
+
+    <!-- 4: Web3 Marketplace -->
+    <div class="concept-card reveal">
+      <div class="concept-card-header">
+        <div class="concept-num">04</div>
+        <div class="concept-badge"><span class="concept-badge-dot"></span>PHP · Solana · MySQL</div>
+        <div class="concept-title">Decentralised E-Commerce Marketplace</div>
+        <div class="concept-tagline">Web2 backend meets Web3 checkout — Phantom &amp; MetaMask payments</div>
+      </div>
+      <div class="concept-card-body">
+        <p class="concept-desc">
+          A marketplace bridging traditional e-commerce architecture with Web3 payment rails. Users list
+          products managed in a PHP/MySQL inventory system, but checkout via crypto wallets — Phantom for
+          Solana, MetaMask for EVM chains. The backend verifies on-chain transactions before marking
+          orders as "Paid" in the database, creating a trustless purchase flow.
+        </p>
+        <div class="concept-features">
+          <div class="concept-feature">
+            <div class="feature-icon">👻</div>
+            <span>Connect Wallet — Phantom (Solana) and MetaMask (EVM) integration</span>
+          </div>
+          <div class="concept-feature">
+            <div class="feature-icon">📦</div>
+            <span>PHP/MySQL inventory system — products, stock levels, and seller profiles</span>
+          </div>
+          <div class="concept-feature">
+            <div class="feature-icon">✅</div>
+            <span>On-chain transaction verification before order status updates in MySQL</span>
+          </div>
+          <div class="concept-feature">
+            <div class="feature-icon">🔄</div>
+            <span>Trustless checkout flow — no credit cards, no intermediaries</span>
+          </div>
+        </div>
+      </div>
+      <div class="concept-card-footer">
+        <div class="concept-tags">
+          <span class="concept-tag hi">Solana</span>
+          <span class="concept-tag hi">PHP</span>
+          <span class="concept-tag">MySQL</span>
+          <span class="concept-tag">Phantom</span>
+          <span class="concept-tag">MetaMask</span>
+          <span class="concept-tag">Web3</span>
+        </div>
+        <div class="concept-proves">Web2 + Web3 Bridge · Payments</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-label">Career</div>
+  <h2 class="section-title">Experience<br>timeline.</h2>
+
+  <div class="timeline">
+    <div class="timeline-item reveal">
+      <div class="tl-date">2024 – Present</div>
+      <div class="tl-title">Independent Web3 & Full-Stack Developer</div>
+      <div class="tl-company">Contractor · Remote (US / UK)</div>
+      <ul class="tl-bullets">
+        <li>Pey Yachts: Web3 integrations for Bored Ape Yacht Club platform</li>
+        <li>Inter.trade: Decentralised trading feature engineering, Arizona</li>
+        <li>$KEK on Solana: Custom Solana Web3 deployment + team leadership, UK</li>
+      </ul>
+    </div>
+    <div class="timeline-item reveal">
+      <div class="tl-date">Jun – Oct 2023</div>
+      <div class="tl-title">Lead Developer</div>
+      <div class="tl-company">Optimumworldafrica · Remote, Ghana</div>
+      <ul class="tl-bullets">
+        <li>Directed end-to-end mobile app development using Flutter & React Native</li>
+        <li>Managed and mentored a distributed engineering team across multiple time zones</li>
+      </ul>
+    </div>
+    <div class="timeline-item reveal">
+      <div class="tl-date">Jan – Jun 2023</div>
+      <div class="tl-title">Web Developer</div>
+      <div class="tl-company">Wakanda Real Estate · On-site, Dubai</div>
+      <ul class="tl-bullets">
+        <li>Built and maintained the primary real estate web application</li>
+        <li>Optimised database queries and UI performance</li>
+      </ul>
+    </div>
+    <div class="timeline-item reveal">
+      <div class="tl-date">Aug 2021 – Jan 2023</div>
+      <div class="tl-title">Lead Developer / Digital Specialist</div>
+      <div class="tl-company">Pearle & Praise Tours · On-site, Dubai · Full-time</div>
+      <ul class="tl-bullets">
+        <li>Promoted to Lead Developer within 7 months of joining</li>
+        <li>Built scalable booking platforms that automated workflows and boosted conversions</li>
+        <li>Oversaw infrastructure, application security, and full technical delivery</li>
+      </ul>
+    </div>
+    <div class="timeline-item reveal">
+      <div class="tl-date">2018 – 2024</div>
+      <div class="tl-title">BSc Computer Science</div>
+      <div class="tl-company">Imo State University (IMSU) · Nigeria</div>
+      <ul class="tl-bullets">
+        <li>Software Engineering, Data Structures & Algorithms, Database Management</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-label">Get In Touch</div>
+  <h2 class="section-title">Let's build<br>something.</h2>
+
+  <div class="contact-inner reveal">
+    <p>Whether you have a product idea, a Web3 project, or a mobile app to ship — I'm open to new collaborations. Let's talk about how we can build something great together.</p>
+    <a href="mailto:chosentech506@gmail.com" class="btn-primary">chosentech506@gmail.com</a>
+
+    <div class="contact-links">
+      <a href="https://www.linkedin.com/in/chosen-chigozie-0710931b5" target="_blank" class="contact-link">↗ LinkedIn</a>
+      <a href="mailto:chosentech506@gmail.com" class="contact-link">↗ Email</a>
+      <a href="#" class="contact-link">↗ GitHub</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 Chosen Chigozie <span class="footer-dot">·</span> Abuja, Nigeria</p>
+  <p>Designed & built with precision <span class="footer-dot">✦</span></p>
+</footer>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  const ring   = document.getElementById('cursor-ring');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  function animCursor() {
+    cursor.style.left = mx + 'px';
+    cursor.style.top  = my + 'px';
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top  = ry + 'px';
+    requestAnimationFrame(animCursor);
+  }
+  animCursor();
+
+  document.querySelectorAll('a, button, .project-card, .skill-item').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '18px'; cursor.style.height = '18px';
+      ring.style.width = '54px'; ring.style.height = '54px';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '10px'; cursor.style.height = '10px';
+      ring.style.width = '36px'; ring.style.height = '36px';
+    });
+  });
+
+  // Scroll reveal
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
